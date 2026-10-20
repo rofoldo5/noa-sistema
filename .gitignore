@@ -22,3 +22,6 @@
 
 trabajo/data/
 **/attachments/
+
+# Respaldos locales
+**/*.bak*
