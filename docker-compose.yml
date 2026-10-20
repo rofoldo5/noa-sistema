@@ -1,0 +1,142 @@
+services:
+  identity-db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: identidad
+      POSTGRES_USER: identidad
+      POSTGRES_PASSWORD: "${IDENTITY_POSTGRES_PASSWORD:?Define IDENTITY_POSTGRES_PASSWORD en Portainer}"
+    volumes:
+      - identity_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U identidad -d identidad"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - identity_private
+
+  identity-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: "postgresql+psycopg://identidad:${IDENTITY_POSTGRES_PASSWORD:?Define IDENTITY_POSTGRES_PASSWORD en Portainer}@identity-db:5432/identidad"
+      JWT_SECRET: "${IDENTITY_JWT_SECRET:?Define IDENTITY_JWT_SECRET en Portainer}"
+    ports:
+      - "127.0.0.1:${IDENTITY_API_PORT:-18081}:8000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    depends_on:
+      identity-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).read()"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - identity_private
+      - identity_api
+
+  work-db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: trabajo
+      POSTGRES_USER: trabajo
+      POSTGRES_PASSWORD: "${WORK_POSTGRES_PASSWORD:?Define WORK_POSTGRES_PASSWORD en Portainer}"
+    volumes:
+      - work_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trabajo -d trabajo"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - work_private
+
+  work-api:
+    build:
+      context: ./trabajo
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: "postgresql+psycopg://trabajo:${WORK_POSTGRES_PASSWORD:?Define WORK_POSTGRES_PASSWORD en Portainer}@work-db:5432/trabajo"
+      IDENTITY_API_URL: http://identity-api:8000
+      WORK_DEPARTMENT_ID: "${WORK_DEPARTMENT_ID:?Define WORK_DEPARTMENT_ID en Portainer}"
+      ATTACHMENT_STORAGE_PATH: /data/attachments
+      MAX_ATTACHMENT_BYTES: "${MAX_ATTACHMENT_BYTES:-104857600}"
+      MEDIA_PREVIEW_SECRET: "${MEDIA_PREVIEW_SECRET:?Define MEDIA_PREVIEW_SECRET en Portainer}"
+    ports:
+      - "127.0.0.1:${WORK_API_PORT:-18082}:8000"
+    volumes:
+      - work_attachments:/data/attachments
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    depends_on:
+      work-db:
+        condition: service_healthy
+      identity-api:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).read()"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - work_private
+      - identity_api
+      - work_api
+
+  noa-frontend:
+    build:
+      context: ./noa-frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${NOA_FRONTEND_PORT:-18083}:8080"
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx:mode=1777
+      - /var/run:mode=1777
+      - /tmp:mode=1777
+    cap_drop: [ALL]
+    depends_on:
+      identity-api:
+        condition: service_started
+      work-api:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - identity_api
+      - work_api
+
+volumes:
+  identity_pgdata:
+  work_pgdata:
+  work_attachments:
+
+networks:
+  # PostgreSQL de Identidad no comparte red con Trabajo ni con el frontend.
+  identity_private:
+    internal: true
+  # PostgreSQL de Trabajo no comparte red con Identidad ni con el frontend.
+  work_private:
+    internal: true
+  # Solo APIs; permite que Trabajo valide sesiones con Identidad.
+  identity_api:
+  # Solo API de Trabajo y frontend; sin PostgreSQL en esta red.
+  work_api:
