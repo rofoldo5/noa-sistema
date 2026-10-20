@@ -1,0 +1,35 @@
+# Disposable QA only: no Identity volume, no host ports, no real credentials.
+services:
+  db-roles-test:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: noa_roles_test
+      POSTGRES_USER: noa_test
+      POSTGRES_PASSWORD: test-only-not-production
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U noa_test -d noa_roles_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  tests:
+    build: .
+    command: ["python", "-m", "pytest", "-q", "-o", "cache_dir=/tmp/pytest-cache"]
+    environment:
+      DATABASE_URL: sqlite:////tmp/unused.db
+      JWT_SECRET: testing-only-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      NOA_TEST_POSTGRES_URL: postgresql+psycopg://noa_test:test-only-not-production@db-roles-test:5432/noa_roles_test
+    volumes:
+      - ./tests:/srv/tests:ro
+      - ./pytest.ini:/srv/pytest.ini:ro
+    tmpfs:
+      - /tmp
+    depends_on:
+      db-roles-test:
+        condition: service_healthy
+    read_only: true
+    # security_opt: [no-new-privileges:true]
+networks:
+  default:
+    internal: true

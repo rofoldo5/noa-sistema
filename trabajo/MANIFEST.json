@@ -1,0 +1,143 @@
+{
+  "name": "NOA Trabajo MVP",
+  "version": "0.1.0",
+  "scope": "Independent FastAPI + PostgreSQL service template for Kanban MVP",
+  "file_count": 27,
+  "files": [
+    {
+      "path": ".dockerignore",
+      "size": 61,
+      "sha256": "52b412b99c94048ecc1483182e04cd166ac0eb7c47d2f4ebcb44eaf09747e7ec"
+    },
+    {
+      "path": ".env.example",
+      "size": 412,
+      "sha256": "94af8415ce74635e740f13bff0838de86ddaf2921ae5f4022f0e86e1c66a8da8"
+    },
+    {
+      "path": ".gitignore",
+      "size": 89,
+      "sha256": "c155a9efe702f8217de2708997eb2fce3fb696d6039030256ab52c2cac76100a"
+    },
+    {
+      "path": "CONFIGURAR_RED_IDENTIDAD.sh",
+      "size": 2524,
+      "sha256": "1ac17159e1b207cbdf15f5e80d186818414aa190b546cb3ec038a3f84036ab30"
+    },
+    {
+      "path": "Dockerfile",
+      "size": 662,
+      "sha256": "660f829dcffd67d350904d2474c8f92ae20871ac0470ad156387c7167252a9f7"
+    },
+    {
+      "path": "Dockerfile.test",
+      "size": 531,
+      "sha256": "c6a561099767f04c970c7839f524da0a0bf4ca704fef22087bd7d6730b681360"
+    },
+    {
+      "path": "PROBAR_POSTGRES.sh",
+      "size": 576,
+      "sha256": "13bf462da6c6bca06c6e0cfc9e4e912b2b8817afa1584b930a7e4cde01e84d83"
+    },
+    {
+      "path": "README.md",
+      "size": 8276,
+      "sha256": "978fc8393f5359a420185dc1d1096f3a0a1383c117ee982ae10bd5429ed1d4be"
+    },
+    {
+      "path": "README_APLICAR.md",
+      "size": 2167,
+      "sha256": "7e4b703341615948a6e29011e1c2add33f9d3fba30eb4bce559ebedb0da94c02"
+    },
+    {
+      "path": "SCHEMA.md",
+      "size": 2510,
+      "sha256": "f3ee6db15e8917607675d4707c4753ff98b337feb9c3aca848f33588b883f1c9"
+    },
+    {
+      "path": "VALIDACION.md",
+      "size": 1293,
+      "sha256": "c4fb0f44a0f538ab6ad2c1e055a10c951b274ce0e2c32d5b6ab4ea3ab4d6ead7"
+    },
+    {
+      "path": "alembic.ini",
+      "size": 607,
+      "sha256": "8bf9b99809d5df97081dec53c30dae6152659b57786ee9c79172741236f6c5e9"
+    },
+    {
+      "path": "app/__init__.py",
+      "size": 49,
+      "sha256": "3552aac2e3ede239948d0b15f4ff5d18aa03b5fe131968668af5936eec236fff"
+    },
+    {
+      "path": "app/main.py",
+      "size": 42458,
+      "sha256": "c55fc9246534e8c3e036bdafe42a386b93ccf951fd1ed55cb7d7ce8fb65260e5"
+    },
+    {
+      "path": "app/models.py",
+      "size": 11682,
+      "sha256": "2343d1618eabbdc1afcc626149530251cb9c1d003e1f68b842e89fb751af34b4"
+    },
+    {
+      "path": "compose.qa.yaml",
+      "size": 1081,
+      "sha256": "cee422d832be7891a15c37a941c861b113e5db57ae9e424ffe1bc46de835ba0a"
+    },
+    {
+      "path": "compose.yaml",
+      "size": 1705,
+      "sha256": "0b1711dcc27fe0ad2a6715b25c061e1fa573e13c90fc42c24c714f1fd67e1c23"
+    },
+    {
+      "path": "data/attachments/.gitkeep",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "migrations/env.py",
+      "size": 1325,
+      "sha256": "1fef82f14e733d7aa3ae72b4041b391cdb3e75a61037775e1984da4c92b0c472"
+    },
+    {
+      "path": "migrations/script.py.mako",
+      "size": 358,
+      "sha256": "d7558dcb7ce01d3e44830898336d3027de66e5ffdb1491c0cd27f6159b021902"
+    },
+    {
+      "path": "migrations/versions/0001_trabajo.py",
+      "size": 11673,
+      "sha256": "b7a25ab496a84809ad698b303e076ddce87e7a89de8ba656036c30dda5aed638"
+    },
+    {
+      "path": "requirements-test.txt",
+      "size": 34,
+      "sha256": "4163bb2f842cc0633fc3e4204d5b4bc873a18cb5c9b06b762718ce9cdd624b5d"
+    },
+    {
+      "path": "requirements.txt",
+      "size": 157,
+      "sha256": "43c3ab9f7b93f9f43cb97219f60bf8f794ced7a4bea7fc01f49cad5e093c3f08"
+    },
+    {
+      "path": "tests/conftest.py",
+      "size": 1595,
+      "sha256": "c1e1b08e2f89ce3153054a51b8696d0d55a54cae854020c1520e670f9ba306d3"
+    },
+    {
+      "path": "tests/test_migration_sqlite.py",
+      "size": 809,
+      "sha256": "b9e725dbe3ec106dd474f4d10a0ce9c48a965251ed3711cc7ec81bea79de1936"
+    },
+    {
+      "path": "tests/test_postgres.py",
+      "size": 3015,
+      "sha256": "c83fe03943be6a7ebf731b27621de7d9d2caa10551cd45daa10dbc579411604e"
+    },
+    {
+      "path": "tests/test_work_api.py",
+      "size": 8515,
+      "sha256": "59e87f9c04154a89b75a9bf7f30e74a7c51e4a960b0b3064c2b2957966deb88d"
+    }
+  ]
+}
